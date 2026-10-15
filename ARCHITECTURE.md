@@ -180,6 +180,16 @@ but stopping at isolated Iteration pools. See [container effects](src/graphon/no
 [handlers](src/graphon/engine/container_handler/builtin/), and
 [cooperative execution tests](tests/engine/test_cooperative_container_execution.py).
 
+**Container values preserve declared types.** Serializable segment types survive
+construction and snapshots, including empty typed arrays. Conversion discards
+source variable identity so completion binds outputs to the container's selectors
+in the parent pool. `ContainerNodeRunResult.to_node_run_result()` retains typed
+outputs for storage while unwrapping inputs; resumed Loop/Iteration presentation
+events unwrap outputs separately. Raw Python values still use type inference,
+and secrets still normalize to strings. See
+[container value tests](tests/nodes/test_container_effects.py) and
+[workflow events and variables](tests/workflows/test_full_engine_events.py).
+
 **Pause is cooperative.** The dispatcher stops new task acquisition, defers
 unstarted work, drains active workers, and snapshots child frames. It continues
 processing commands while draining, so abort can supersede pause. Runtime
